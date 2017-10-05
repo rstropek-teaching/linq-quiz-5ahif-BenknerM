@@ -16,7 +16,17 @@ namespace LinqQuiz.Library
         /// </exception>
         public static int[] GetEvenNumbers(int exclusiveUpperLimit)
         {
-            throw new NotImplementedException();
+            if(exclusiveUpperLimit < 1)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            int[] numbers = new int [exclusiveUpperLimit-1];
+           
+             for (int i = 1; i < exclusiveUpperLimit; i++){
+                     numbers[i - 1] = i;
+             }
+             var evennum = (from num in numbers where (num % 2) == 0 select num).ToArray();
+             return evennum;
         }
 
         /// <summary>
@@ -33,7 +43,25 @@ namespace LinqQuiz.Library
         /// </remarks>
         public static int[] GetSquares(int exclusiveUpperLimit)
         {
-            throw new NotImplementedException();
+            if(exclusiveUpperLimit < 1)
+            {
+                return new int[0];
+            }
+            
+            if ( exclusiveUpperLimit >= Math.Sqrt(Int32.MaxValue))
+            {
+                throw new OverflowException();
+            }
+
+            int[] numbers = new int[exclusiveUpperLimit - 1];
+
+            for (int i = 1; i < exclusiveUpperLimit; i++)
+            {
+                numbers[i - 1] = i;
+            }
+            var squares = (from num in numbers where (num % 7 == 0) orderby num descending select num*num).ToArray();
+            
+            return squares;
         }
 
         /// <summary>
@@ -52,7 +80,41 @@ namespace LinqQuiz.Library
         /// </remarks>
         public static FamilySummary[] GetFamilyStatistic(IReadOnlyCollection<IFamily> families)
         {
-            throw new NotImplementedException();
+            if (families != null)
+            {
+                int famId;
+                int numofPersons;
+                decimal ages = 0;
+                decimal avgAge;
+                FamilySummary[] famSum = new FamilySummary[families.Count];
+
+                if (families.ElementAt(0).Persons.Count == 0)
+                {
+                    FamilySummary[] empty = new FamilySummary[1];
+                    empty[0] = new FamilySummary { FamilyID = 1, NumberOfFamilyMembers = 0, AverageAge = 0 };
+                    return empty;
+                }
+
+                for (int i = 0; i < families.Count(); i++)
+                {
+                    ages = 0;
+                    famId = families.ElementAt(i).ID;
+                    numofPersons = families.ElementAt(i).Persons.Count;
+                    foreach (var per in families.ElementAt(i).Persons)
+                    {
+                        ages += per.Age;
+                    }
+                    avgAge = ages / numofPersons;
+
+                    famSum[i] = new FamilySummary { FamilyID = famId, NumberOfFamilyMembers = numofPersons, AverageAge = avgAge };
+
+                }
+                return famSum;
+            }
+            else
+            {
+                throw new ArgumentNullException();
+            }
         }
 
         /// <summary>
