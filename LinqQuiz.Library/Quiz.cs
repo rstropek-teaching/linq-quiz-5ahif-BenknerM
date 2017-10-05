@@ -132,7 +132,46 @@ namespace LinqQuiz.Library
         /// </remarks>
         public static (char letter, int numberOfOccurrences)[] GetLetterStatistic(string text)
         {
-            throw new NotImplementedException();
+            char[] lets = new Char[26];
+            int[] Occ = new int[26];
+            char[] cText = text.Trim().ToCharArray();
+            bool done = false;
+            if(text.Any(char.IsDigit))
+            {
+                return new(char letter, int numberOfOccurrences)[0];
+            }
+            for (int i = 0; i< cText.Length; i++)
+            {
+                for(int j = 0; j< cText.Length && done==false; j++)
+                {
+                    if (cText[i].Equals(lets[j]))
+                    {
+                        
+                        Occ[j]++;
+                        done=true;
+                    }
+                    else if(lets[j].Equals('\u0000'))
+                    {
+                        lets[j] = cText[i];
+                        Occ[j]++;
+                        done= true;
+                    }
+                }
+                done = false;
+            }
+            int k = 0;
+            int count = 0;
+            while (Occ[k]!=0)
+            {
+                count++;
+                k++;
+            }
+            (char letter, int numberOfOccurrences)[] end = new (char letter, int numberOfOccurrences)[count];
+            for(int i = 0; i < count; i++)
+            {
+                end[i] = (lets[i], Occ[i]);
+            }
+            return end;
         }
     }
 }
